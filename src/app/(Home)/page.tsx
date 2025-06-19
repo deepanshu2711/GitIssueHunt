@@ -1,0 +1,134 @@
+
+"use client";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useGetIssues } from "@/hooks/queries/useGetIssues";
+import Image from "next/image";
+import Link from "next/link";
+
+
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+import { useState } from "react";
+import { PageLoader } from "@/components/Loader";
+
+
+export default function Home() {
+  const [page, setPage] = useState(1);
+  const { data, isLoading } = useGetIssues(page);
+
+  const totalPages = Math.ceil(data?.total_count / 30);
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1).slice(
+    Math.max(0, page - 3),
+    page + 5
+  );
+
+  if (isLoading) return <PageLoader />
+
+  return (
+    <div className="mt-9 flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col">
+          <p className="text-gray-300 text-xl font-semibold">Issues</p>
+          <p className="text-gray-300 text-sm font-semibold">{data.total_count.toLocaleString()} results</p>
+        </div>
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Language" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="light">Javascript</SelectItem>
+            <SelectItem value="dark">Typescript</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="mt-3 flex-col flex gap-4 mb-8">
+        {data.items.map((item: any, idx: number) => (
+          <Card
+            key={idx}
+            className="border-[1px] bg-accent-foreground/50 text-gray-300 border-green-300 transition-all"
+          >
+            <CardContent className="flex flex-col gap-1">
+              <div className="flex items-center gap-3">
+                <Image
+                  src={item.user.avatar_url}
+                  height={26}
+                  width={25}
+                  className="rounded-full"
+                  alt="user avatar"
+                />
+                <Link href={`https://github.com/${item.repository_url.split("/").slice(-2).join("/")}`} target="_blank" className="hover:text-blue-500 cursor-pointer">
+                  {item.repository_url.split("/").slice(-2).join("/")}
+                </Link>
+              </div>
+              <Link
+                href={item.html_url}
+                target="_blank"
+                className="hover:text-blue-500 line-clamp-1 font-semibold cursor-pointer"
+              >
+                {item.title}
+              </Link>
+              <p className="line-clamp-1 text-sm">{item.body}</p>
+              <div className="flex items-center gap-1 mt-2">
+                {item.labels.map((label: any, idx: number) => (
+                  <Badge
+                    key={idx}
+                    style={{ backgroundColor: `#${label.color}` }}
+                  >
+                    {label.name}
+                  </Badge>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <Pagination className="text-gray-300">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              onClick={(e) => {
+                e.preventDefault();
+                if (page > 1) setPage((p) => p - 1);
+              }}
+            />
+          </PaginationItem>
+
+          {pageNumbers.map((p) => (
+            <PaginationItem key={p}>
+              <PaginationLink
+                isActive={p === page}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPage(p);
+                }}
+                className={`${page === p ? "bg-green-900" : ""} rounded-md`}
+              >
+                {p}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+
+          <PaginationItem>
+            <PaginationNext
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (page < totalPages) setPage((p) => p + 1);
+              }}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    </div>
+  );
+}
