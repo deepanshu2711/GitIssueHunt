@@ -1,4 +1,3 @@
-
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,9 +19,32 @@ import { useState } from "react";
 import { PageLoader } from "@/components/Loader";
 
 
+type Label = {
+  id: number;
+  name: string;
+  color: string;
+};
+
+type Issue = {
+  title: string;
+  body: string;
+  html_url: string;
+  labels: Label[];
+  user: { avatar_url: string };
+  repository_url: string;
+};
+
+type GitHubIssuesResponse = {
+  total_count: number;
+  items: Issue[];
+};
+
 export default function Home() {
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useGetIssues(page);
+  const { data, isLoading } = useGetIssues(page) as {
+    data: GitHubIssuesResponse;
+    isLoading: boolean;
+  };
 
   const totalPages = Math.ceil(data?.total_count / 30);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1).slice(
@@ -51,7 +73,7 @@ export default function Home() {
       </div>
 
       <div className="mt-3 flex-col flex gap-4 mb-8">
-        {data.items.map((item: any, idx: number) => (
+        {data.items.map((item: Issue, idx: number) => (
           <Card
             key={idx}
             className="border-[1px] bg-accent-foreground/50 text-gray-300 border-green-300 transition-all"
@@ -78,7 +100,7 @@ export default function Home() {
               </Link>
               <p className="line-clamp-1 text-sm">{item.body}</p>
               <div className="flex items-center gap-1 mt-2">
-                {item.labels.map((label: any, idx: number) => (
+                {item.labels.map((label: Label, idx: number) => (
                   <Badge
                     key={idx}
                     style={{ backgroundColor: `#${label.color}` }}
