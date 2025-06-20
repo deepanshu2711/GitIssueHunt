@@ -41,7 +41,9 @@ type GitHubIssuesResponse = {
 
 export default function Home() {
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useGetIssues(page) as {
+  const [lang, setLang] = useState("javascript");
+
+  const { data, isLoading } = useGetIssues(page, lang) as {
     data: GitHubIssuesResponse;
     isLoading: boolean;
   };
@@ -52,6 +54,8 @@ export default function Home() {
     page + 5
   );
 
+  console.log("data", lang);
+
   if (isLoading) return <PageLoader />
 
   return (
@@ -61,13 +65,13 @@ export default function Home() {
           <p className="text-gray-300 text-xl font-semibold">Issues</p>
           <p className="text-gray-300 text-sm font-semibold">{data.total_count.toLocaleString()} results</p>
         </div>
-        <Select>
+        <Select value={lang} onValueChange={(value) => setLang(value)}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Language" />
+            <SelectValue placeholder="Select language" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="light">Javascript</SelectItem>
-            <SelectItem value="dark">Typescript</SelectItem>
+            <SelectItem value="javascript">JavaScript</SelectItem>
+            <SelectItem value="typescript">TypeScript</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -151,6 +155,6 @@ export default function Home() {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-    </div>
+    </div >
   );
 }
