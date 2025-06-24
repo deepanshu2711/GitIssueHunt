@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/pagination"
 import { useState } from "react";
 import { PageLoader } from "@/components/Loader";
+import { githubLabels } from "./constants";
 
 
 type Label = {
@@ -42,8 +43,9 @@ type GitHubIssuesResponse = {
 export default function Home() {
   const [page, setPage] = useState(1);
   const [lang, setLang] = useState("javascript");
+  const [label, setLabel] = useState("");
 
-  const { data, isLoading } = useGetIssues(page, lang) as {
+  const { data, isLoading } = useGetIssues(page, lang, label) as {
     data: GitHubIssuesResponse;
     isLoading: boolean;
   };
@@ -65,16 +67,38 @@ export default function Home() {
           <p className="text-gray-300 text-xl font-semibold">Issues</p>
           <p className="text-gray-300 text-sm font-semibold">{data.total_count.toLocaleString()} results</p>
         </div>
-        <Select value={lang} onValueChange={(value) => setLang(value)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select language" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="javascript">JavaScript</SelectItem>
-            <SelectItem value="typescript">TypeScript</SelectItem>
-          </SelectContent>
-        </Select>
+
+        <div className="flex items-center gap-4">
+          <Select value={label} onValueChange={(value) => setLabel(value)}>
+            <SelectTrigger className="w-[250px]">
+              <SelectValue placeholder="good-first-issue" />
+            </SelectTrigger>
+            <SelectContent>
+              {githubLabels.map((label) => (
+                <SelectItem key={label} value={label}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+
+          <Select value={lang} onValueChange={(value) => setLang(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select language" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="javascript">JavaScript</SelectItem>
+              <SelectItem value="typescript">TypeScript</SelectItem>
+              <SelectItem value="python">Python</SelectItem>
+              <SelectItem value="java">Java</SelectItem>
+              <SelectItem value="go">Go</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
+
+
 
       <div className="mt-3 flex-col flex gap-4 mb-8">
         {data.items.map((item: Issue, idx: number) => (
