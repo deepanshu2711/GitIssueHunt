@@ -39,11 +39,25 @@ type GitHubIssuesResponse = {
   items: Issue[];
 };
 
+type Option = {
+  value: string;
+  label: string;
+};
+
 export default function Home() {
   const [page, setPage] = useState(1);
   const [lang, setLang] = useState("javascript");
+  const options: Option[] = [
+    { value: "good first issue", label: "Good first issue" },
+    { value: "help wanted", label: "Help wanted" },
+    { value: "bug", label: "Bug" },
+    { value: "enhancement", label: "Enhancement" },
+    { value: "documentation", label: "Documentation" },
+    { value: "feature request", label: "Feature Request" },
+  ];
+  const [label, setLabel] = useState("good first issue");
 
-  const { data, isLoading } = useGetIssues(page, lang) as {
+  const { data, isLoading } = useGetIssues(page, lang, label) as {
     data: GitHubIssuesResponse;
     isLoading: boolean;
   };
@@ -59,21 +73,37 @@ export default function Home() {
   if (isLoading) return <PageLoader />
 
   return (
-    <div className="mt-9 flex flex-col gap-4">
+    <div className="mt-9 flex flex-col gap-4 ">
       <div className="flex items-center justify-between">
         <div className="flex flex-col">
           <p className="text-gray-300 text-xl font-semibold">Issues</p>
           <p className="text-gray-300 text-sm font-semibold">{data.total_count.toLocaleString()} results</p>
         </div>
-        <Select value={lang} onValueChange={(value) => setLang(value)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select language" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="javascript">JavaScript</SelectItem>
-            <SelectItem value="typescript">TypeScript</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex gap-2">
+
+          <Select value={lang} onValueChange={(value) => setLang(value)}>
+            <SelectTrigger className="w-[180px] text-gray-300  font-semibold">
+              <SelectValue placeholder="Select language" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="javascript">JavaScript</SelectItem>
+              <SelectItem value="typescript">TypeScript</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={label} onValueChange={(value) => setLabel(value)}>
+            <SelectTrigger className="w-[180px] text-gray-300  font-semibold">
+              <SelectValue placeholder="Select language" />
+            </SelectTrigger>
+            <SelectContent>
+              {options.map(opt => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="mt-3 flex-col flex gap-4 mb-8">
