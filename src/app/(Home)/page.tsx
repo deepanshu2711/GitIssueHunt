@@ -1,11 +1,17 @@
 "use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useGetIssues } from "@/hooks/queries/useGetIssues";
 import Image from "next/image";
 import Link from "next/link";
-
 
 import {
   Pagination,
@@ -14,10 +20,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
 import { useState } from "react";
 import { PageLoader } from "@/components/Loader";
-
 
 type Label = {
   id: number;
@@ -47,6 +52,8 @@ type Option = {
 export default function Home() {
   const [page, setPage] = useState(1);
   const [lang, setLang] = useState("javascript");
+  const [label, setLabel] = useState("good first issue");
+
   const options: Option[] = [
     { value: "good first issue", label: "Good first issue" },
     { value: "help wanted", label: "Help wanted" },
@@ -55,7 +62,6 @@ export default function Home() {
     { value: "documentation", label: "Documentation" },
     { value: "feature request", label: "Feature Request" },
   ];
-  const [label, setLabel] = useState("good first issue");
 
   const { data, isLoading } = useGetIssues(page, lang, label) as {
     data: GitHubIssuesResponse;
@@ -68,39 +74,42 @@ export default function Home() {
     page + 5
   );
 
-  console.log("data", lang);
-
-  if (isLoading) return <PageLoader />
+  if (isLoading) return <PageLoader />;
 
   return (
     <div className="mt-9 flex flex-col gap-4 ">
       <div className="flex items-center justify-between">
         <div className="flex flex-col">
           <p className="text-gray-300 text-xl font-semibold">Issues</p>
-          <p className="text-gray-300 text-sm font-semibold">{data.total_count.toLocaleString()} results</p>
+          <p className="text-gray-300 text-sm font-semibold">
+            {data.total_count.toLocaleString()} results
+          </p>
         </div>
-        <div className="flex gap-2">
+
+        <div className="flex items-center gap-4">
+          <Select value={label} onValueChange={(value) => setLabel(value)}>
+            <SelectTrigger className="w-[250px] text-gray-300 font-semibold">
+              <SelectValue placeholder="Select label" />
+            </SelectTrigger>
+            <SelectContent>
+              {options.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           <Select value={lang} onValueChange={(value) => setLang(value)}>
-            <SelectTrigger className="w-[180px] text-gray-300  font-semibold">
+            <SelectTrigger className="w-[180px] text-gray-300 font-semibold">
               <SelectValue placeholder="Select language" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="javascript">JavaScript</SelectItem>
               <SelectItem value="typescript">TypeScript</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={label} onValueChange={(value) => setLabel(value)}>
-            <SelectTrigger className="w-[180px] text-gray-300  font-semibold">
-              <SelectValue placeholder="Select language" />
-            </SelectTrigger>
-            <SelectContent>
-              {options.map(opt => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-
+              <SelectItem value="python">Python</SelectItem>
+              <SelectItem value="java">Java</SelectItem>
+              <SelectItem value="go">Go</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -121,7 +130,14 @@ export default function Home() {
                   className="rounded-full"
                   alt="user avatar"
                 />
-                <Link href={`https://github.com/${item.repository_url.split("/").slice(-2).join("/")}`} target="_blank" className="hover:text-blue-500 cursor-pointer">
+                <Link
+                  href={`https://github.com/${item.repository_url
+                    .split("/")
+                    .slice(-2)
+                    .join("/")}`}
+                  target="_blank"
+                  className="hover:text-blue-500 cursor-pointer"
+                >
                   {item.repository_url.split("/").slice(-2).join("/")}
                 </Link>
               </div>
@@ -185,6 +201,6 @@ export default function Home() {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-    </div >
+    </div>
   );
 }
