@@ -2,8 +2,8 @@ import { Loader } from "lucide-react"
 
 export const PageLoader = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <Loader className="animate-spin text-gray-300 siz-10" />
+    <div className="flex min-h-screen  items-center justify-center bg-[#24292e] text-gray-100">
+      <Loader className="animate-spin size-6" />
     </div>
   )
 }
