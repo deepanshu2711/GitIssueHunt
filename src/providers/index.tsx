@@ -1,19 +1,19 @@
 "use client"
 
 import { TanStackQueryProvider } from './QueryClientProvider';
-import { AuthGaurdProvider } from './AuthGuardProvider';
 import StoreProvider from './StoreProvider';
 import { AuthSessionProvider } from './SessionProvider';
+import { AuthGuardProvider } from './AuthGuardProvider';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AuthSessionProvider>
       <StoreProvider>
-        <AuthGaurdProvider>
+        <AuthGuardProvider>
           <TanStackQueryProvider>
             {children}
           </TanStackQueryProvider>
-        </AuthGaurdProvider>
+        </AuthGuardProvider>
       </StoreProvider>
     </AuthSessionProvider>
   );
