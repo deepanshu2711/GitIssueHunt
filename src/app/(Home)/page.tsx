@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/pagination";
 import { useState } from "react";
 import { PageLoader } from "@/components/Loader";
+import { useAppSelector } from "@/redux/hooks";
+import { selectUser } from "@/redux/slices/userSlice";
 
 type Label = {
   id: number;
@@ -53,6 +55,9 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [lang, setLang] = useState("javascript");
   const [label, setLabel] = useState("good first issue");
+  const user = useAppSelector(selectUser);
+
+  console.log("User:", user);
 
   const options: Option[] = [
     { value: "good first issue", label: "Good first issue" },

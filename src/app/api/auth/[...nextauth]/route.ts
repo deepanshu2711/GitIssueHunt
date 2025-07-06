@@ -29,8 +29,23 @@ const handler = NextAuth({
           accessToken: account?.access_token,
         }
       })
-
       return true;
+    },
+    async jwt({ token, user, account }) {
+      if (account && user) {
+        token.accessToken = account.access_token;
+        token.githubId = account.providerAccountId;
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.githubId = token.githubId;
+        session.user.accessToken = token.accessToken;
+        session.user.id = token.id;
+      }
+      return session;
     },
     async redirect({ baseUrl }) {
       return baseUrl;
