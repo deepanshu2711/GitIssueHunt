@@ -85,15 +85,15 @@ export default function Home() {
     <div className="mt-9 flex flex-col gap-4 ">
       <div className="flex items-center justify-between">
         <div className="flex flex-col">
-          <p className="text-gray-300 text-xl font-semibold">Issues</p>
-          <p className="text-gray-300 text-sm font-semibold">
+          <p className="text-gray-800 text-xl font-semibold">Issues</p>
+          <p className="text-gray-800 text-sm font-semibold">
             {data.total_count.toLocaleString()} results
           </p>
         </div>
 
         <div className="flex items-center gap-4">
           <Select value={label} onValueChange={(value) => setLabel(value)}>
-            <SelectTrigger className="w-[250px] text-gray-300 font-semibold">
+            <SelectTrigger className="w-[250px] text-gray-800 font-semibold">
               <SelectValue placeholder="Select label" />
             </SelectTrigger>
             <SelectContent>
@@ -106,7 +106,7 @@ export default function Home() {
           </Select>
 
           <Select value={lang} onValueChange={(value) => setLang(value)}>
-            <SelectTrigger className="w-[180px] text-gray-300 font-semibold">
+            <SelectTrigger className="w-[180px] text-gray-800 font-semibold">
               <SelectValue placeholder="Select language" />
             </SelectTrigger>
             <SelectContent>
@@ -124,7 +124,7 @@ export default function Home() {
         {data.items.map((item: Issue, idx: number) => (
           <Card
             key={idx}
-            className="border-[1px] bg-accent-foreground/50 text-gray-300 border-green-300 transition-all"
+            className="border-[1px]  text-gray-800  transition-all"
           >
             <CardContent className="flex flex-col gap-1">
               <div className="flex items-center gap-3">
