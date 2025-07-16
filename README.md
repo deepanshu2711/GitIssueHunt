@@ -30,3 +30,42 @@ First, clone the repo:
 git clone https://github.com/deepanshu2711/GitIssueHunt.git
 cd GitIssueHunt
 
+
+
+
+🏗️ Project Features Roadmap
+1. Browse All Issues Page
+✅ Fetch issues directly from GitHub API (good first issue / help wanted)
+
+🔄 Add Redis caching (5–10 min) to reduce API calls & avoid GitHub rate limits
+
+❌ Do not store these issues in your DB
+
+2. Tracked Repos Page
+✅ Let users "track" a repo (store repo info in DB)
+
+🧠 Store all issues from tracked repos in your database
+
+🔁 Set up background sync (daily/hourly):
+
+Use Kafka to queue sync_repo jobs
+
+Worker (consumer) fetches issues & updates DB
+
+Track only open beginner-friendly issues
+
+Optional: Track repo metadata (stars, last updated, etc.)
+
+3. Saved Issues Page
+❤️ Let users "save" issues they want to revisit
+
+Store saved issues per user in DB
+
+Optional: Add tags or notes
+
+4. User System
+🔐 Enable GitHub login (OAuth)
+
+✅ Store user’s tracked repos & saved issues
+
+Optional: Show "recently viewed" or "recommendations"
