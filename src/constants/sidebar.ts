@@ -1,3 +1,4 @@
+import { Roles } from "@/generated/prisma";
 import {
   Home,
   Search,
@@ -5,6 +6,8 @@ import {
   User,
   BookOpen,
   Settings,
+  LayoutDashboard,
+  Users,
 } from "lucide-react";
 
 export const menuGroups = [
@@ -13,20 +16,27 @@ export const menuGroups = [
     items: [
       { title: "Home", url: "/", icon: Home },
       { title: "Discover Issues", url: "/discover", icon: Search },
-    ],
-  },
-  {
-    label: "Contribute",
-    items: [
       { title: "Saved Issues", url: "/saved", icon: Bookmark },
       { title: "Resources", url: "/resources", icon: BookOpen },
+      { title: "Profile", url: "/profile", icon: User },
+      { title: "Settings", url: "/settings", icon: Settings },
     ],
   },
   {
-    label: "Account",
+    label: "Admin",
     items: [
-      { title: "Profile", url: "/profile", icon: User },
-      { title: "Settings", url: "/settings", icon: Settings },
+      {
+        title: "Dashboard",
+        url: "/admin/dashboard",
+        icon: LayoutDashboard,
+        roles: [Roles.superadmin, Roles.admin],
+      },
+      {
+        title: "Users",
+        url: "/admin/users",
+        icon: Users,
+        roles: [Roles.admin, Roles.superadmin],
+      },
     ],
   },
 ];

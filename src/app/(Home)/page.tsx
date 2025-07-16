@@ -3,7 +3,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -13,6 +12,7 @@ import { useGetIssues } from "@/hooks/queries/useGetIssues";
 import Image from "next/image";
 import Link from "next/link";
 
+import { PageLoader } from "@/components/Loader";
 import {
   Pagination,
   PaginationContent,
@@ -21,10 +21,10 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useState } from "react";
-import { PageLoader } from "@/components/Loader";
 import { useAppSelector } from "@/redux/hooks";
 import { selectUser } from "@/redux/slices/userSlice";
+import { Select } from "@radix-ui/react-select";
+import { useState } from "react";
 
 type Label = {
   id: number;
@@ -76,7 +76,7 @@ export default function Home() {
   const totalPages = Math.ceil(data?.total_count / 30);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1).slice(
     Math.max(0, page - 3),
-    page + 5
+    page + 5,
   );
 
   if (isLoading) return <PageLoader />;

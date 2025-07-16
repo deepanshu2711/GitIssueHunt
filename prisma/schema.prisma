@@ -19,12 +19,21 @@ enum Provider {
   github
 }
 
+enum Roles {
+    superadmin
+    admin
+    user
+    guest
+  }
+
 model User {
   id       String  @id @default(cuid())
   email    String  @unique
   name     String?
   image    String?
   password String?
+
+  role Roles @default(user)
 
   githubId    String? @unique
   accessToken String? @unique

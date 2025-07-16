@@ -17,27 +17,24 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { logout, selectUser } from "@/redux/slices/userSlice";
 
-import { ChevronUp } from "lucide-react"
-
+import { ChevronUp } from "lucide-react";
 
 import { menuGroups } from "@/constants/sidebar";
 import { signOut } from "next-auth/react";
 
-
-
 export function AppSidebar() {
-  const user = useAppSelector(selectUser)
+  const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
 
   const handleSignOut = async () => {
     dispatch(logout());
     await signOut({ callbackUrl: "/api/auth/signin" });
-  }
+  };
 
   return (
     <Sidebar variant="sidebar">
@@ -83,9 +80,7 @@ export function AppSidebar() {
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-              >
+              <DropdownMenuContent side="top">
                 <DropdownMenuItem onClick={handleSignOut}>
                   <span>Sign out</span>
                 </DropdownMenuItem>
@@ -97,4 +92,3 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
-
