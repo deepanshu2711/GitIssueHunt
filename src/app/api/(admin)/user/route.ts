@@ -1,8 +1,7 @@
 import { prisma } from "@/lib/primsa";
 import { errorResponse, successResponse } from "@/utils/apiResponse";
-import { NextRequest } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const users = await prisma.user.findMany();
     return successResponse(users);

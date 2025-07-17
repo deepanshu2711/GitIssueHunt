@@ -1,16 +1,13 @@
-import axios from "axios";
+import { withRedisCache } from "@/lib/withRedisCache";
+import { gitHubServices } from "./gitHubServices";
 
 export const issueService = {
   getAll: async (query: string, page: string) => {
-    const response = await axios.get(
-      `https://api.github.com/search/issues?q=${query}&page=${page}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`,
-          Accept: "application/vnd.github+json",
-        },
-      },
+    const cacheKey = `issues:${query}:page:${page}`;
+    return withRedisCache(
+      cacheKey,
+      () => gitHubServices.fetchGithubIssues(query, page),
+      { ttlSeconds: 6000 },
     );
-    return response.data;
   },
 };

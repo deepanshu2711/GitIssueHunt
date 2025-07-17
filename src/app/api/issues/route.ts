@@ -10,9 +10,11 @@ export async function GET(req: NextRequest) {
 
   try {
     const query = `label:"${label}"+language:${lang}+state:open+is:issue`;
-    const response = issueService.getAll(query, page);
+    console.log(query);
+    const response = await issueService.getAll(query, page);
     return successResponse(response);
   } catch (error) {
+    console.log(error);
     return errorResponse("Error while fetching issues");
   }
 }
