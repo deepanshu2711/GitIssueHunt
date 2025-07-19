@@ -1,7 +1,9 @@
+import { UserPanel } from "@/components/admin/users/UserPanel";
+
 export default function Page() {
   return (
     <>
-      <p>Admin Users</p>
+      <UserPanel />
     </>
   );
 }

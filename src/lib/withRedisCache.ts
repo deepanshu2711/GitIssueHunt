@@ -12,6 +12,7 @@ export const withRedisCache = async <T>(
   try {
     const cached = await redis.get(key);
     if (cached) return cached;
+    console.log("cached", cached);
 
     const result = await fetcher();
     await redis.set(key, result, {
