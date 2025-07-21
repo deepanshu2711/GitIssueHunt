@@ -1,7 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   SelectContent,
   SelectItem,
@@ -9,8 +7,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useGetIssues } from "@/hooks/queries/useGetIssues";
-import Image from "next/image";
-import Link from "next/link";
 
 import { PageLoader } from "@/components/Loader";
 import {
@@ -25,49 +21,21 @@ import { useAppSelector } from "@/redux/hooks";
 import { selectUser } from "@/redux/slices/userSlice";
 import { Select } from "@radix-ui/react-select";
 import { useState } from "react";
-
-type Label = {
-  id: number;
-  name: string;
-  color: string;
-};
-
-type Issue = {
-  title: string;
-  body: string;
-  html_url: string;
-  labels: Label[];
-  user: { avatar_url: string };
-  repository_url: string;
-};
+import { IssueCard } from "@/components/issue/IssueCard";
+import { Issue } from "@/components/issue/types";
+import { options } from "./constants";
 
 type GitHubIssuesResponse = {
   total_count: number;
   items: Issue[];
 };
 
-type Option = {
-  value: string;
-  label: string;
-};
-
 export default function Home() {
   const [page, setPage] = useState(1);
   const [lang, setLang] = useState("javascript");
   const [label, setLabel] = useState("good first issue");
+
   const user = useAppSelector(selectUser);
-
-  console.log("User:", user);
-
-  const options: Option[] = [
-    { value: "good first issue", label: "Good first issue" },
-    { value: "help wanted", label: "Help wanted" },
-    { value: "bug", label: "Bug" },
-    { value: "enhancement", label: "Enhancement" },
-    { value: "documentation", label: "Documentation" },
-    { value: "feature request", label: "Feature Request" },
-  ];
-
   const { data, isLoading } = useGetIssues(page, lang, label) as {
     data: GitHubIssuesResponse;
     isLoading: boolean;
@@ -122,50 +90,7 @@ export default function Home() {
 
       <div className="mt-3 flex-col flex gap-4 mb-8">
         {data.items.map((item: Issue, idx: number) => (
-          <Card
-            key={idx}
-            className="border-[1px]  text-gray-800  transition-all"
-          >
-            <CardContent className="flex flex-col gap-1">
-              <div className="flex items-center gap-3">
-                <Image
-                  src={item.user.avatar_url}
-                  height={26}
-                  width={25}
-                  className="rounded-full"
-                  alt="user avatar"
-                />
-                <Link
-                  href={`https://github.com/${item.repository_url
-                    .split("/")
-                    .slice(-2)
-                    .join("/")}`}
-                  target="_blank"
-                  className="hover:text-blue-500 cursor-pointer"
-                >
-                  {item.repository_url.split("/").slice(-2).join("/")}
-                </Link>
-              </div>
-              <Link
-                href={item.html_url}
-                target="_blank"
-                className="hover:text-blue-500 line-clamp-1 font-semibold cursor-pointer"
-              >
-                {item.title}
-              </Link>
-              <p className="line-clamp-1 text-sm">{item.body}</p>
-              <div className="flex items-center gap-1 mt-2">
-                {item.labels.map((label: Label, idx: number) => (
-                  <Badge
-                    key={idx}
-                    style={{ backgroundColor: `#${label.color}` }}
-                  >
-                    {label.name}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <IssueCard item={item} />
         ))}
       </div>
 

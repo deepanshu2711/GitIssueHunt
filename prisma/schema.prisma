@@ -43,5 +43,23 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  savedIssues SavedIssue[]
+
   @@map("users")
 }
+
+model SavedIssue {
+    id String @id @default(cuid())
+    userId String 
+    issueUrl String 
+    title String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user User @relation(fields:[userId], references:[id])
+
+    @@map("saved_issues")
+    @@unique([userId, issueUrl])
+    
+  }
