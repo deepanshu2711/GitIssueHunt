@@ -17,8 +17,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useAppSelector } from "@/redux/hooks";
-import { selectUser } from "@/redux/slices/userSlice";
 import { Select } from "@radix-ui/react-select";
 import { useState } from "react";
 import { IssueCard } from "@/components/issue/IssueCard";
@@ -35,7 +33,6 @@ export default function Home() {
   const [lang, setLang] = useState("javascript");
   const [label, setLabel] = useState("good first issue");
 
-  const user = useAppSelector(selectUser);
   const { data, isLoading } = useGetIssues(page, lang, label) as {
     data: GitHubIssuesResponse;
     isLoading: boolean;
@@ -89,8 +86,10 @@ export default function Home() {
       </div>
 
       <div className="mt-3 flex-col flex gap-4 mb-8">
-        {data.items.map((item: Issue, idx: number) => (
-          <IssueCard item={item} />
+        {data.items.map((item: Issue, idx) => (
+          <div key={idx}>
+            <IssueCard item={item} />
+          </div>
         ))}
       </div>
 
