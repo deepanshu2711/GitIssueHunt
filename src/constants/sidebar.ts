@@ -10,7 +10,27 @@ import {
   Users,
 } from "lucide-react";
 
-export const menuGroups = [
+/*
+  * Represents a menu item in the sidebar.
+  * Each item has a title, URL, icon, and optional roles that define visibility.
+ */
+export type MenuItem = {
+  title: string;
+  url: string;
+  icon: any;
+  roles?: Roles[];
+};
+
+/*
+  * Represents a group of menu items in the sidebar.
+  * Each group has a label and an array of items.
+ */
+export type MenuGroup = {
+  label: string;
+  items: MenuItem[];
+};
+
+export const menuGroups: MenuGroup[] = [
   {
     label: "Main",
     items: [

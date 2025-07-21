@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { Roles } from "@/generated/prisma";
+
 
 import {
   Sidebar,
@@ -26,6 +28,25 @@ import { ChevronUp } from "lucide-react";
 
 import { menuGroups } from "@/constants/sidebar";
 import { signOut } from "next-auth/react";
+import type { MenuGroup } from "@/constants/sidebar";
+
+/*
+  * Filters the menu groups based on the user's role.
+  * If a group has no items after filtering, it will be removed.
+  * If an item has no roles defined, it will be visible to all users.
+  * If an item has roles defined, it will only be visible to users with a matching role.
+ */
+function filterMenuGroupsByRole(menuGroups: MenuGroup[], role?: Roles) {
+  return menuGroups.map(group => ({
+    ...group,
+    items: group.items.filter(item => {
+      // If item has no roles, anyone can view it
+      if (!item.roles) return true;
+      // If item has roles, only show if user has a matching role
+      return role && item.roles.includes(role);
+    })
+  })).filter(group => group.items.length > 0); // Hiden groups with no items
+}
 
 export function AppSidebar() {
   const user = useAppSelector(selectUser);
@@ -35,6 +56,13 @@ export function AppSidebar() {
     dispatch(logout());
     await signOut({ callbackUrl: "/api/auth/signin" });
   };
+
+  
+  /* 
+    * Filter menu groups based on user role
+    * This will remove any groups or items that the user does not have access to
+  */
+  const filteredMenuGroups = filterMenuGroupsByRole(menuGroups, user?.role);
 
   return (
     <Sidebar variant="sidebar">
@@ -46,7 +74,7 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {menuGroups.map((group) => (
+        {filteredMenuGroups.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
             <SidebarGroupContent>
