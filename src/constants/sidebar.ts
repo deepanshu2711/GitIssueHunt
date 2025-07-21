@@ -8,22 +8,23 @@ import {
   Settings,
   LayoutDashboard,
   Users,
+  LucideIcon,
 } from "lucide-react";
 
 /*
-  * Represents a menu item in the sidebar.
-  * Each item has a title, URL, icon, and optional roles that define visibility.
+ * Represents a menu item in the sidebar.
+ * Each item has a title, URL, icon, and optional roles that define visibility.
  */
 export type MenuItem = {
   title: string;
   url: string;
-  icon: any;
+  icon: LucideIcon;
   roles?: Roles[];
 };
 
 /*
-  * Represents a group of menu items in the sidebar.
-  * Each group has a label and an array of items.
+ * Represents a group of menu items in the sidebar.
+ * Each group has a label and an array of items.
  */
 export type MenuGroup = {
   label: string;
