@@ -6,7 +6,13 @@ declare module "next-auth" {
       id?: string;
       githubId?: string;
       accessToken?: string;
+      role?: string; // Add role if you have a custom User object
     } & DefaultSession["user"];
+  }
+
+  interface User {
+    id?: string;
+    role?: string; // Add role if you have a custom User object
   }
 }
 
@@ -15,5 +21,6 @@ declare module "next-auth/jwt" {
     id?: string;
     githubId?: string;
     accessToken?: string;
+    role?: string; // Add role to token
   }
 }
